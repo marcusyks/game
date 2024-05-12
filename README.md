@@ -31,7 +31,7 @@ This is just a random game that I made for fun...
 2. Start game:
 
     ```bash
-    python3 main.py
+    python main.py
     ```
 
 Feel free to use and modify this code for your own projects.
