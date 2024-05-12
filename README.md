@@ -22,7 +22,13 @@ This is just a random game that I made for fun...
     git clone https://github.com/marcusyks/im-bored-game.git
     ```
 
-2. Start the game:
+2. Download required dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2. Start game:
 
     ```bash
     python3 main.py
