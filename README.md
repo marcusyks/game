@@ -28,7 +28,7 @@ This is just a random game that I made for fun...
     pip install -r requirements.txt
     ```
 
-2. Start game:
+3. Start game:
 
     ```bash
     python main.py

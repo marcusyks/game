@@ -1,16 +1,17 @@
 import pygame
 import random
+import csv
 
 """
 Game Constants
 """
 PLAYER_SIZE = 40
 CAPTION = "I'm Bored Game"
-DURATION = 30
+DURATION = 5
 SCREEN_SIZE = (1280, 720)
 BOUNDARY = PLAYER_SIZE*3
-PLAYABLE_X = (BOUNDARY,1280-BOUNDARY)
-PLAYABLE_Y = (BOUNDARY,720-BOUNDARY)
+PLAYABLE_X = (BOUNDARY,SCREEN_SIZE[0]-BOUNDARY)
+PLAYABLE_Y = (BOUNDARY,SCREEN_SIZE[1]-BOUNDARY)
 MOVEMENT_SPEED = 300
 BLOCK_SIZE = 10
 
@@ -297,7 +298,7 @@ class MovementHandler():
     Class that handles all scenes and acts as a controller
 """
 class GameHandler():
-    def __init__(self, player_size, caption, duration, boundary, playable_x, playable_y, block_size, movement_speed):
+    def __init__(self, player_size, caption, duration, boundary, playable_x, playable_y, block_size, movement_speed, screen_size):
 
         """
         Constructor of GameHandler class
@@ -325,7 +326,7 @@ class GameHandler():
         self.block_size = block_size
         self.movement_speed = movement_speed
         self.running = True
-        self.screen = pygame.display.set_mode((1280, 720))
+        self.screen = pygame.display.set_mode(screen_size)
 
         self.screen_handler = ScreenHandler(self.screen, self.player_size)
         self.game_logic = None
@@ -515,6 +516,12 @@ class GameHandler():
         menu_text = "[M] to go back to menu"
         menu_pos = (self.screen.get_width() / 2, self.screen.get_height() - 200)
 
+        # Update high score
+        new_high_score = self.high_score(points)
+
+        hs_text = f"New high score: {points}!" if new_high_score else  f"Current high score: {points}"
+        hs_pos = (200, 20)
+
         # Check for events
         while self.running:
             for event in pygame.event.get():
@@ -528,6 +535,7 @@ class GameHandler():
                         self.start_menu()
 
             # Redraw the button
+            self.screen_handler.draw_text(hs_text,"paragraph",hs_pos)
             self.screen_handler.draw_text(title_text,"title",title_pos)
             self.screen_handler.draw_text(points_text,"paragraph",points_pos)
             self.screen_handler.draw_text(restart_text,"paragraph",restart_pos)
@@ -536,12 +544,32 @@ class GameHandler():
             # Update the display
             pygame.display.flip()
 
-    def leaderboard(self):
-        # Read txt file
-        # See if score is higher than current highscore -> display text and update txt
-        # Else display current highscore
-        pass
+    def high_score(self, points):
+
+        """
+        Update high score
+
+        Args:
+            points (int): Amount of points accumulated over the game
+        """
+
+        with open('high_score.csv', 'r') as readfile:
+            csvreader = csv.reader(readfile)
+            data = list(csvreader)
+            with open('high_score.csv', 'w') as writefile:
+                writer = csv.writer(writefile)
+                if len(data) == 0: # There is no high score
+                    writer.writerow([f'{points}'])
+                    return True
+                else:
+                    current_high_score = int(data[0][0])
+                    if current_high_score < points: # Score higher than high score
+                        writer.writerow([f'{points}'])
+                        return True
+                    else: # Score lower than high score
+                        writer.writerow([f'{current_high_score}'])
+        return False
 
 if __name__ == "__main__":
-    game_handler = GameHandler(PLAYER_SIZE,CAPTION,DURATION,BOUNDARY,PLAYABLE_X,PLAYABLE_Y,BLOCK_SIZE,MOVEMENT_SPEED)
+    game_handler = GameHandler(PLAYER_SIZE,CAPTION,DURATION,BOUNDARY,PLAYABLE_X,PLAYABLE_Y,BLOCK_SIZE,MOVEMENT_SPEED,SCREEN_SIZE)
     game_handler.start_menu()
