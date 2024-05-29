@@ -520,7 +520,7 @@ class GameHandler():
         new_high_score = self.high_score(points)
 
         hs_text = f"New high score: {points}!" if new_high_score else  f"Current high score: {points}"
-        hs_pos = (200, 20)
+        hs_pos = (190, 20)
 
         # Check for events
         while self.running:

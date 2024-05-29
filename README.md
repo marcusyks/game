@@ -14,6 +14,10 @@ This is just a random game that I made for fun...
     - The game starts with a single player.
     - The game gets progressively harder as you shrink and move slower
 
+4. **High Score:**
+    - Your high score is recorded.
+
+
 ## Installation
 
 1. Clone the repository:
